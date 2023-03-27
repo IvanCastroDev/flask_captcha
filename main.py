@@ -21,7 +21,6 @@ def resolve_captcha():
     file_path = f"./captchas/{secure_filename(file.filename)}"
     file.save(file_path)
     text = predictText(file_path)
-    print(text)
     os.remove(file_path)
     return make_response({"text": text}, 200)
 
