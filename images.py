@@ -1,5 +1,7 @@
 import tensorflow as tf
-
+import cv2
+from PIL import Image
+import os
 def encode_single_sample(img_path):
     img_width = 220
     img_height = 40
@@ -17,3 +19,18 @@ def encode_single_sample(img_path):
     img = tf.transpose(img, perm=[1, 0, 2])
     # 7. Return a dict as our model is expecting two inputs
     return {"image": img}
+
+def processImage(img_path):
+    with Image.open(img_path) as img:
+        path = f"./captchas/{img_path.split('/')[2].replace('.', '')}.jpg"
+        img = img.convert('L')
+        img = img.point(lambda x: 0 if x < 225 else 255, '1')
+        img = img.point(lambda x: 0 if x >= 230 else 255)
+        img.save(path)
+        img = cv2.imread(path)
+        img = cv2.bitwise_not(img)
+        cv2.imwrite(path, img)
+
+        os.remove(img_path)
+
+        return path
