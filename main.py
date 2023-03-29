@@ -29,8 +29,12 @@ def resolve_captcha():
 
 @app.route('/mayaCaptcha', methods=['POST'])
 def processAndResolveCaptcha():
-    print(request.values['token'])
     file = request.files['file']
+    token = request.values['token']
+
+    if token != 'xeNqzRVoamixNAcp.B7$dkE$$Mx*#C9ZIHtz3#4IYabhzU/GA.xkSduW5mMg4sH1aQYjGiAu2RYyN1uVcuy33%bmBJksHY27Wv-h5CFlQOL/RIgUHcj4xum%kK-$n.bxbv-GYr*DD8r3yh5jC7SLkHU!#SyJMMoejw-!hPEp9wIk5#sU8N$YEV1UJ-90Js6IS$vwSK.C/':
+        return make_response({"error": 'Token no autorizado'}, 401)
+
     file_path = f"./unprocessed/{secure_filename(file.filename)}"
     file.save(file_path)
     processedImagePath = processImage(file_path)
